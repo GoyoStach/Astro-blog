@@ -1,0 +1,38 @@
+---
+import HeaderLink from './HeaderLink.astro'
+import { MY_SITE, SITE_TITLE } from '../config'
+import { IoLogoGithub } from 'react-icons/io5/index.js'
+import ThemeToggle from '../components/ThemeToggleButton'
+import DropdownMenu from './DropdownMenu';
+
+import { getCollection } from 'astro:content';
+
+
+const allPosts = (await getCollection('guide'))
+const allTags = new Set<string>()
+allPosts.map(post => {
+  post.data.tags &&
+    post.data.tags.map((tag: string) => allTags.add(tag))
+})
+---
+
+
+
+<header class="fixed w-full p-2 z-20 backdrop-blur-md ">
+  <div class="mx-auto justify-center flex">
+    <nav class="flex items-center gap-6 text-base justify-between max-w-3xl xl:max-w-[80%] grow">
+      <a href="/">
+        <h2
+          class="font-semibold tracking-tighter p-2 font-silkScreen text-lg text-expresso-200"
+        >
+          {SITE_TITLE}
+        </h2>
+      </a>
+      <div class="flex items-center gap-6 ">
+        <ThemeToggle client:visible />
+        <DropdownMenu client:visible tags={Array.from(allTags)}/>
+      </div>
+    </nav>
+  </div>
+</header>
+
